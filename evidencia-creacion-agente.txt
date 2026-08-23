@@ -1,0 +1,16 @@
+Evidencia de Creación del Data Agent en BigQuery
+
+1. Habilitación de APIs en GCP:
+   - geminidataanalytics.googleapis.com
+   - bigquery.googleapis.com
+   - run.googleapis.com
+   - cloudfunctions.googleapis.com
+   - cloudbuild.googleapis.com
+
+2. Creación del Agente en BigQuery Studio:
+   - Nombre: analista-arboles-sf
+   - Dataset: bigquery-public-data.san_francisco_trees.tree_census
+   - Instrucciones del sistema: "Eres un analista de datos especializado en el dataset de árboles de San Francisco."
+
+3. Verificación en la Consola de GCP:
+   - El agente aparece en la lista de agentes de BigQuery Studio.

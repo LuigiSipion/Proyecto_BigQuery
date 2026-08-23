@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agente de Análisis de Árboles - San Francisco</title>
+    <link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🌳 Agente de Análisis de Árboles en San Francisco</h1>
+        <p>Haz preguntas en lenguaje natural sobre el dataset de árboles de San Francisco.</p>
+        <div class="chat-container">
+            <div id="chat" class="chat-box">
+                <p class="welcome-message">¡Hola! Soy tu asistente de análisis de datos. Pregúntame sobre los árboles de San Francisco.</p>
+            </div>
+            <div class="input-container">
+                <input type="text" id="prompt" placeholder="Ej: ¿Cuáles son los 5 árboles más comunes?" class="input-field">
+                <button onclick="sendPrompt()" class="send-button">Enviar</button>
+            </div>
+        </div>
+        <div class="examples">
+            <h3>Ejemplos de preguntas:</h3>
+            <ul>
+                <li>¿Cuántos árboles hay en el dataset?</li>
+                <li>¿Cuáles son los 5 árboles más comunes?</li>
+                <li>¿En qué distrito hay más árboles?</li>
+            </ul>
+        </div>
+    </div>
+    <script>
+        const ENDPOINT_URL = "https://analista-arboles-sf-abc123-uc.a.run.app";
+        async function sendPrompt() {
+            const promptInput = document.getElementById("prompt");
+            const prompt = promptInput.value.trim();
+            if (!prompt) {
+                alert("Por favor, ingresa una pregunta.");
+                return;
+            }
+            const chatBox = document.getElementById("chat");
+            chatBox.innerHTML += `<div class="user-message"><strong>Tú:</strong> ${prompt}</div>`;
+            promptInput.value = "";
+            const loadingId = `loading-${Date.now()}`;
+            chatBox.innerHTML += `<div id="${loadingId}" class="loading">⏳ Pensando...</div>`;
+            try {
+                const response = await fetch(ENDPOINT_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ prompt: prompt }),
+                });
+                const data = await response.json();
+                document.getElementById(loadingId).remove();
+                if (response.ok) {
+                    chatBox.innerHTML += `<div class="agent-message"><strong>Agente:</strong> ${data.response}</div>`;
+                } else {
+                    chatBox.innerHTML += `<div class="error-message"><strong>Error:</strong> ${data.error || "Error desconocido"}</div>`;
+                }
+            } catch (error) {
+                document.getElementById(loadingId).remove();
+                chatBox.innerHTML += `<div class="error-message"><strong>Error:</strong> ${error.message}</div>`;
+            }
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+        document.getElementById("prompt").addEventListener("keypress", function(e) {
+            if (e.key === "Enter") sendPrompt();
+        });
+    </script>
+</body>
+</html>
